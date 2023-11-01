@@ -29,12 +29,13 @@ class Inicio extends StatefulWidget {
 class _InicioState extends State<Inicio> {
   List<TodoItem> todos = [];
   String todo = '';
+  Priority selectedPriority = Priority.medium; // Prioridad seleccionada
   final TextEditingController _todoController = TextEditingController();
 
   void addTodo() {
     setState(() {
       if (todo.isNotEmpty) {
-        todos.add(TodoItem(todo, false));
+        todos.add(TodoItem(todo, selectedPriority, false));
         todo = '';
         _todoController.clear(); // Limpiar el campo de entrada
       }
@@ -58,7 +59,7 @@ class _InicioState extends State<Inicio> {
       todos.sort((a, b) {
         if (a.isComplete && !b.isComplete) {
           return 1;
-        } else if (!a.isComplete & b.isComplete) {
+        } else if (!a.isComplete && b.isComplete) {
           return -1;
         } else {
           return 0;
@@ -75,80 +76,6 @@ class _InicioState extends State<Inicio> {
       ),
       body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(
-                    right: 20,
-                    left: 20,
-                    bottom: 20,
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                    vertical: 5,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.grey,
-                        offset: Offset.zero,
-                        blurRadius: 10.0,
-                        spreadRadius: 0,
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: TextField(
-                    controller: _todoController, // Usa el controlador
-                    onChanged: (text) {
-                      setState(() {
-                        todo = text;
-                      });
-                    },
-                    onSubmitted: (text) {
-                      addTodo();
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Agrega una nueva tarea',
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 20, right: 20),
-                child: Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: addTodo,
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(60, 60),
-                        elevation: 10,
-                      ),
-                      child: const Icon(
-                        Icons.add,
-                        size: 30,
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: sortTodos,
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(60, 60),
-                        elevation: 10,
-                      ),
-                      child: const Icon(
-                        Icons.sort,
-                        size: 30,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
           Expanded(
             child: ListView(
               children: todos
@@ -165,12 +92,112 @@ class _InicioState extends State<Inicio> {
                   .toList(),
             ),
           ),
+          Container(
+            margin: const EdgeInsets.only(top: 10, bottom: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                      right: 10, // Espacio entre el botón "Agregar" y "Ordenar"
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset.zero,
+                          blurRadius: 10.0,
+                          spreadRadius: 0,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextField(
+                      controller: _todoController, // Usa el controlador
+                      onChanged: (text) {
+                        setState(() {
+                          todo = text;
+                        });
+                      },
+                      onSubmitted: (text) {
+                        addTodo();
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Agrega una nueva tarea',
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: addTodo,
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(60, 60),
+                    elevation: 10,
+                  ),
+                  child: const Icon(
+                    Icons.add,
+                    size: 30,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: sortTodos,
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(60, 60),
+                    elevation: 10,
+                  ),
+                  child: const Icon(
+                    Icons.sort,
+                    size: 30,
+                  ),
+                ),
+                // Botón para cambiar la prioridad
+                PopupMenuButton<Priority>(
+                  onSelected: (priority) {
+                    setState(() {
+                      selectedPriority = priority;
+                    });
+                  },
+                  icon: Icon(Icons.priority_high), // Ícono del botón
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry<Priority>>[
+                    const PopupMenuItem<Priority>(
+                      value: Priority.low,
+                      child: Text('Baja'),
+                    ),
+                    const PopupMenuItem<Priority>(
+                      value: Priority.medium,
+                      child: Text('Media'),
+                    ),
+                    const PopupMenuItem<Priority>(
+                      value: Priority.high,
+                      child: Text('Alta'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget wTask(TodoItem t, int index) {
+    Color priorityColor = Colors.black;
+    if (t.priority == Priority.low) {
+      priorityColor = Colors.green;
+    } else if (t.priority == Priority.medium) {
+      priorityColor = Colors.amber;
+    } else if (t.priority == Priority.high) {
+      priorityColor = Colors.red;
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 7),
       child: ListTile(
@@ -196,11 +223,7 @@ class _InicioState extends State<Inicio> {
               ),
               Icon(
                 Icons.bolt,
-                color: t.isComplete
-                    ? Colors.green.shade400
-                    : t.isComplete
-                        ? Colors.amber.shade400
-                        : Colors.red.shade900,
+                color: priorityColor,
               ),
             ],
           ),
@@ -223,9 +246,16 @@ class _InicioState extends State<Inicio> {
   }
 }
 
+enum Priority {
+  low,
+  medium,
+  high,
+}
+
 class TodoItem {
   String task;
+  Priority priority;
   bool isComplete;
 
-  TodoItem(this.task, this.isComplete);
+  TodoItem(this.task, this.priority, this.isComplete);
 }
