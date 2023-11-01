@@ -135,27 +135,40 @@ class _InicioState extends State<Inicio> {
                     ),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: addTodo,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(60, 60),
-                    elevation: 10,
-                  ),
-                  child: const Icon(
-                    Icons.add,
-                    size: 30,
-                  ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
                 ),
-                ElevatedButton(
-                  onPressed: sortTodos,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(60, 60),
-                    elevation: 10,
-                  ),
-                  child: const Icon(
-                    Icons.sort,
-                    size: 30,
-                  ),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                      child: ElevatedButton(
+                        onPressed: addTodo,
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(60, 60),
+                          elevation: 10,
+                        ),
+                        child: const Icon(
+                          Icons.add,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                      child: ElevatedButton(
+                        onPressed: sortTodos,
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(60, 60),
+                          elevation: 10,
+                        ),
+                        child: const Icon(
+                          Icons.sort,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 // Botón para cambiar la prioridad
                 PopupMenuButton<Priority>(
@@ -209,7 +222,7 @@ class _InicioState extends State<Inicio> {
           horizontal: 15,
           vertical: 5,
         ),
-        tileColor: t.isComplete ? Colors.grey : null,
+        tileColor: t.isComplete ? const Color.fromARGB(255, 201, 201, 201) : null,
         leading: Container(
           alignment: Alignment.centerLeft,
           width: 56,
@@ -229,7 +242,7 @@ class _InicioState extends State<Inicio> {
           ),
         ),
         title: Text(
-          'Tarea: ${t.task}',
+          t.task,
         ),
         trailing: IconButton(
           iconSize: 20,
