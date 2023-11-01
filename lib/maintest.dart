@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/logic.dart';
+import 'package:todolist/addTask.dart';
 
 void main() => runApp(ElliotsApp());
 
@@ -39,12 +40,11 @@ class ElliotsApp extends StatelessWidget {
             Container(
               margin: const EdgeInsets.all(7),
               child: 
-                ListView(
-                  children: [
-                    wTask(Task("Pet the dog", Priority.medium)),
-                    wTask(Task("Finish The Project", Priority.high)),
-                    wTask(Task("Sleep", Priority.low))
-                  ],
+                ListView.builder(
+                  itemCount: widgetsTaskList.length,
+                  itemBuilder: (context, index)  {
+                    return widgetsTaskList[index];
+                  },
                 ),
               ),
               Align(alignment: Alignment.bottomCenter,
@@ -66,7 +66,12 @@ class ElliotsApp extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       ),
                       
-                      child: const TextField(
+                      child:  TextField(
+                        onChanged: (text) {
+                          setState(() {
+                            taskName =text; 
+                          });   
+                        },
                         decoration: InputDecoration(
                           hintText: 'Agregue un nueva tarea',
                           border: InputBorder.none
@@ -77,7 +82,11 @@ class ElliotsApp extends StatelessWidget {
                   Container(
                     margin: const EdgeInsets.only(bottom: 20, right: 20),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                          setState(() {
+                            addTask();
+                          });
+                        },
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size(60, 60),
                         elevation: 10,
@@ -96,25 +105,3 @@ class ElliotsApp extends StatelessWidget {
     }
   }
 
-Widget wTask(Task t){
-  return Container(
-    margin: const EdgeInsets.only(bottom: 7),
-    child: 
-    ListTile(
-      //onTap: ,
-      //visualDensity: VisualDensity.adaptivePlatformDensity,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      
-      contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-      tileColor: const Color.fromARGB(255, 216, 216, 216),
-      leading: Checkbox(value: t.active, onChanged: null,),
-      title: Text('Tarea: ${t.name}',
-      //  style: TextStyle(fontSize: 16),
-      ),
-      trailing: Icon(
-        Icons.bolt,
-        color: t.p == Priority.low ? Colors.green.shade400: t.p == Priority.medium ? Colors.amber.shade400 : Colors.red.shade900
-      ),
-  ),
-  );
-}
