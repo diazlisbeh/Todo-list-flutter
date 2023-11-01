@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:todolist/logic.dart';
-import 'package:todolist/addTask.dart';
 
 void main() => runApp(ElliotsApp());
 
@@ -38,14 +37,13 @@ class _InicioState extends State<Inicio> {
           //alignment: Alignment.center,
           children: [
             Container(
-              margin: const EdgeInsets.all(7),           ],
-              child: 
-                ListView.builder(
-                  itemCount: widgetsTaskList.length,
-                  itemBuilder: (context, index)  {
-                    return widgetsTaskList[index];
-                  },
-                ),
+              margin: const EdgeInsets.all(7),
+              child: ListView(
+                children: [
+                  wTask(Task("Pet the dog", Priority.medium)),
+                  wTask(Task("Finish The Project", Priority.high)),
+                  wTask(Task("Sleep", Priority.low))
+                ],
               ),
             ),
             Align(
@@ -70,14 +68,9 @@ class _InicioState extends State<Inicio> {
                         )
                       ],
                       borderRadius: BorderRadius.circular(10),
-                      ),
-                      child:  TextField(
-                        onChanged: (text) {
-                          setState(() {
-                            taskName =text; 
-                          });   
-                        },
-                        decoration: InputDecoration(
+                    ),
+                    child: const TextField(
+                      decoration: InputDecoration(
                           hintText: 'Agregue un nueva tarea',
                           border: InputBorder.none),
                     ),
@@ -85,18 +78,15 @@ class _InicioState extends State<Inicio> {
                   Container(
                     margin: const EdgeInsets.only(bottom: 20, right: 20),
                     child: ElevatedButton(
-                      onPressed: () {
-                          setState(() {
-                            addTask();
-                          });
-                        },
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(60, 60),
-                        elevation: 10,
-                      ),
-                      
-                      child: const Text('+', style: TextStyle(fontSize: 40),),
-                    ),
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(60, 60),
+                          elevation: 10,
+                        ),
+                        child: const Icon(
+                          Icons.add,
+                          size: 30,
+                        )),
                   ),
                 ],
               ),
@@ -104,4 +94,55 @@ class _InicioState extends State<Inicio> {
           ],
         ));
   }
+}
+
+Widget wTask(Task t) {
+  final chkTASK = GlobalKey();
+void marcarcompletada(Task t2){ 
+t2.active=!t2.active;
+}
+
+  return Container(
+    margin: const EdgeInsets.only(bottom: 7),
+    child: ListTile(
+      onTap:() {
+        marcarcompletada(t);
+      },
+      //visualDensity: VisualDensity.adaptivePlatformDensity,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+
+      contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+      tileColor: const Color.fromARGB(255, 216, 216, 216),
+      leading: Container(
+          alignment: Alignment.centerLeft,
+          width: 56,
+          child: Row(
+            children: [
+              Checkbox( 
+                value: t.active,
+                key:chkTASK,
+                onChanged:(value) { t.active = value!;}
+              ),
+              Icon(Icons.bolt,
+                  color: t.p == Priority.low
+                      ? Colors.green.shade400
+                      : t.p == Priority.medium
+                          ? Colors.amber.shade400
+                          : Colors.red.shade900),
+            ],
+          )),
+      title: Text(
+        'Tarea: ${t.name}',
+        //  style: TextStyle(fontSize: 16),
+      ),
+      trailing: IconButton(
+        iconSize: 20,
+        icon: const Icon(Icons.delete),
+        color: Colors.red.shade800,
+        tooltip: 'Eliminar esta tarea',
+        splashRadius: 18,
+        onPressed: () {},
+      ),
+    ),
+  );
 }
