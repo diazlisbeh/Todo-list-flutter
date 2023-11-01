@@ -38,14 +38,12 @@ class _InicioState extends State<Inicio> {
           //alignment: Alignment.center,
           children: [
             Container(
-              margin: const EdgeInsets.all(7),           ],
-              child: 
-                ListView.builder(
-                  itemCount: widgetsTaskList.length,
-                  itemBuilder: (context, index)  {
-                    return widgetsTaskList[index];
-                  },
-                ),
+              margin: const EdgeInsets.all(7),
+              child: ListView.builder(
+                itemCount: widgetsTaskList.length,
+                itemBuilder: (context, index) {
+                  return widgetsTaskList[index];
+                },
               ),
             ),
             Align(
@@ -70,14 +68,14 @@ class _InicioState extends State<Inicio> {
                         )
                       ],
                       borderRadius: BorderRadius.circular(10),
-                      ),
-                      child:  TextField(
-                        onChanged: (text) {
-                          setState(() {
-                            taskName =text; 
-                          });   
-                        },
-                        decoration: InputDecoration(
+                    ),
+                    child: TextField(
+                      onChanged: (text) {
+                        setState(() {
+                          taskName = text;
+                        });
+                      },
+                      decoration: const InputDecoration(
                           hintText: 'Agregue un nueva tarea',
                           border: InputBorder.none),
                     ),
@@ -86,16 +84,18 @@ class _InicioState extends State<Inicio> {
                     margin: const EdgeInsets.only(bottom: 20, right: 20),
                     child: ElevatedButton(
                       onPressed: () {
-                          setState(() {
-                            addTask();
-                          });
-                        },
+                        setState(() {
+                          addTask();
+                        });
+                      },
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size(60, 60),
                         elevation: 10,
                       ),
-                      
-                      child: const Text('+', style: TextStyle(fontSize: 40),),
+                      child: const Text(
+                        '+',
+                        style: TextStyle(fontSize: 40),
+                      ),
                     ),
                   ),
                 ],

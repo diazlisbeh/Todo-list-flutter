@@ -98,14 +98,14 @@ class _InicioState extends State<Inicio> {
 
 Widget wTask(Task t) {
   final chkTASK = GlobalKey();
-void marcarcompletada(Task t2){ 
-t2.active=!t2.active;
-}
+  void marcarcompletada(Task t2) {
+    t2.active = !t2.active;
+  }
 
   return Container(
     margin: const EdgeInsets.only(bottom: 7),
     child: ListTile(
-      onTap:() {
+      onTap: () {
         marcarcompletada(t);
       },
       //visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -118,15 +118,16 @@ t2.active=!t2.active;
           width: 56,
           child: Row(
             children: [
-              Checkbox( 
-                value: t.active,
-                key:chkTASK,
-                onChanged:(value) { t.active = value!;}
-              ),
+              Checkbox(
+                  value: t.active,
+                  key: chkTASK,
+                  onChanged: (value) {
+                    t.active = value!;
+                  }),
               Icon(Icons.bolt,
-                  color: t.p == Priority.low
+                  color: t.priority == Priority.low
                       ? Colors.green.shade400
-                      : t.p == Priority.medium
+                      : t.priority == Priority.medium
                           ? Colors.amber.shade400
                           : Colors.red.shade900),
             ],

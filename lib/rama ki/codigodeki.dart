@@ -78,23 +78,20 @@ class _InicioState extends State<Inicio> {
         children: [
           Expanded(
             child: ListView(
-              children: todos
-                  .asMap()
-                  .entries
-                  .map((entry) {
-                    final index = entry.key;
-                    final task = entry.value;
-                    return wTask(
-                      task,
-                      index,
-                    );
-                  })
-                  .toList(),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              children: todos.asMap().entries.map((entry) {
+                final index = entry.key;
+                final task = entry.value;
+                return wTask(
+                  task,
+                  index,
+                );
+              }).toList(),
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(top: 10, bottom: 10),
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
               children: [
                 Expanded(
@@ -128,14 +125,16 @@ class _InicioState extends State<Inicio> {
                       onSubmitted: (text) {
                         addTodo();
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Agrega una nueva tarea',
                         border: InputBorder.none,
                       ),
                     ),
                   ),
                 ),
-                ElevatedButton(
+                Container(
+                    //margin: const EdgeInsets.only(left: 5),
+                    child: ElevatedButton(
                   onPressed: addTodo,
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(60, 60),
@@ -145,40 +144,54 @@ class _InicioState extends State<Inicio> {
                     Icons.add,
                     size: 30,
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: sortTodos,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(60, 60),
-                    elevation: 10,
-                  ),
-                  child: const Icon(
-                    Icons.sort,
-                    size: 30,
+                )),
+                Container(
+                  margin: const EdgeInsets.only(left: 5),
+                  child: ElevatedButton(
+                    onPressed: sortTodos,
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(60, 60),
+                      elevation: 10,
+                    ),
+                    child: const Icon(
+                      Icons.sort,
+                      size: 30,
+                    ),
                   ),
                 ),
                 // Botón para cambiar la prioridad
-                PopupMenuButton<Priority>(
-                  onSelected: (priority) {
-                    setState(() {
-                      selectedPriority = priority;
-                    });
-                  },
-                  icon: Icon(Icons.priority_high), // Ícono del botón
-                  itemBuilder: (BuildContext context) => <PopupMenuEntry<Priority>>[
-                    const PopupMenuItem<Priority>(
-                      value: Priority.low,
-                      child: Text('Baja'),
-                    ),
-                    const PopupMenuItem<Priority>(
-                      value: Priority.medium,
-                      child: Text('Media'),
-                    ),
-                    const PopupMenuItem<Priority>(
-                      value: Priority.high,
-                      child: Text('Alta'),
-                    ),
-                  ],
+                Container(
+                  margin: const EdgeInsets.only(left: 5),
+                  height: 52,
+                  width: 60,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: Colors.blue),
+                  child: PopupMenuButton<Priority>(
+                    onSelected: (priority) {
+                      setState(() {
+                        selectedPriority = priority;
+                      });
+                    },
+                    icon: Icon(Icons.bolt_outlined), // Ícono del botón
+                    color: Colors.white,
+                    iconSize: 30,
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<Priority>>[
+                      const PopupMenuItem<Priority>(
+                        value: Priority.low,
+                        child: Text('Baja'),
+                      ),
+                      const PopupMenuItem<Priority>(
+                        value: Priority.medium,
+                        child: Text('Media'),
+                      ),
+                      const PopupMenuItem<Priority>(
+                        value: Priority.high,
+                        child: Text('Alta'),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -191,7 +204,7 @@ class _InicioState extends State<Inicio> {
   Widget wTask(TodoItem t, int index) {
     Color priorityColor = Colors.black;
     if (t.priority == Priority.low) {
-      priorityColor = Colors.green;
+      priorityColor = Colors.blueAccent;
     } else if (t.priority == Priority.medium) {
       priorityColor = Colors.amber;
     } else if (t.priority == Priority.high) {
@@ -209,7 +222,9 @@ class _InicioState extends State<Inicio> {
           horizontal: 15,
           vertical: 5,
         ),
-        tileColor: t.isComplete ? Colors.grey : null,
+        tileColor: t.isComplete
+            ? Colors.lightGreen
+            : const Color.fromARGB(255, 216, 216, 216),
         leading: Container(
           alignment: Alignment.centerLeft,
           width: 56,
@@ -229,7 +244,10 @@ class _InicioState extends State<Inicio> {
           ),
         ),
         title: Text(
-          'Tarea: ${t.task}',
+          t.task,
+          style: t.isComplete
+              ? TextStyle(decoration: TextDecoration.lineThrough)
+              : null,
         ),
         trailing: IconButton(
           iconSize: 20,
