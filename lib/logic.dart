@@ -2,9 +2,9 @@ enum Priority {low, medium, high}
 class Task{
   String name;
   bool active = false;
-  Priority p;
+  Priority priority;
   
-  Task(this.name, this.p);
+  Task(this.name, this.priority);
 
   complete(){
     if (!active) {
